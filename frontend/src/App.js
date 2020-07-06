@@ -15,17 +15,25 @@ function App() {
 
   useEffect(() => {
     async function loadDevs() {
-      const response = await api.get('/devs')
-
-      setDevs(response.data)
+      try {
+        const response = await api.get('/devs')
+        setDevs(response.data)
+      } catch (error) {
+        alert('Erro ao carregar devs')        
+      }
     }
     loadDevs()
   }, [])
 
   async function handleSubmit(data) {
-    const response = await api.post('devs', data)
+    try {
+      const response = await api.post('devs', data)
 
-    setDevs([...devs, response.data])
+      setDevs([...devs, response.data])
+    } catch (error) {
+      alert('Erro ao adicionar novo dev')      
+    }
+
   }
 
   return (
