@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Image, View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, Image, View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
 import MapView, { Marker, Callout } from 'react-native-maps';
 import  { requestPermissionsAsync, getCurrentPositionAsync } from 'expo-location';
 import { MaterialIcons } from '@expo/vector-icons';
@@ -37,15 +37,22 @@ function Main({ navigation }) {
   async function loadDevs() {
     const { latitude, longitude } = currentRegion
 
-    const response = await api.get('/serch', {
-      params: {
-        latitude,
-        longitude,
-        techs,
-      }
-    })
-    
-    setDevs(response.data.devs)
+
+    try {
+      const response = await api.get('/serch', {
+        params: {
+          latitude,
+          longitude,
+          techs,
+        }
+      })
+    } catch (error) {
+      Alert.alert('Erro ao carregar devs', 'Não foi possível carregar os devs, cheque sua conexão com a internet, caso contrario é erro no nosso servidor')     
+      return
+    }
+
+
+    setDevs(response.data)
   }
 
   function handleRengionChange(region) {
